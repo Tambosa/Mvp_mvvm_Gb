@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Mvp_mvvm</string>
+    <string name="login_hint">Login</string>
+    <string name="password_hint">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="forgot_password">Forgot Password</string>
 </resources>
