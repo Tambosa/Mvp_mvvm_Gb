@@ -85,6 +85,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.LoginView {
         binding.loginButton.isEnabled = false
         binding.registerButton.isEnabled = false
         binding.forgotPasswordButton.isEnabled = false
+        binding.loginProgressBar.visibility = View.VISIBLE
         hideKeyboard(this)
     }
 
@@ -93,6 +94,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.LoginView {
         binding.loginButton.isEnabled = true
         binding.registerButton.isEnabled = true
         binding.forgotPasswordButton.isEnabled = true
+        binding.loginProgressBar.visibility = View.INVISIBLE
     }
 
     private fun hideKeyboard(activity: Activity) {
