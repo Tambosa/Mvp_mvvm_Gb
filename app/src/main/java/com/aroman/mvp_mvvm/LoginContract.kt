@@ -27,10 +27,4 @@ class LoginContract {
         fun onRegisterNewUser(login: String, password: String)
         fun onForgotPassword(login: String)
     }
-
-    interface LoginModel {
-        fun onLoginAttempt(login: String, password: String): Int
-        fun onCreateNewUser(login: String, password: String): Int
-        fun onForgotPassword(login: String): Int
-    }
 }

@@ -2,12 +2,11 @@ package com.aroman.mvp_mvvm
 
 import android.os.Handler
 import android.os.Looper
-import com.google.android.material.snackbar.Snackbar
 import java.lang.Thread.sleep
 
 class LoginPresenter : LoginContract.LoginPresenter {
     private var view: LoginContract.LoginView? = null
-    private val model: LoginContract.LoginModel = LoginModel()
+    private val model: LoginApi = MockLoginApiImpl()
     private val uiHandler = Handler(Looper.getMainLooper())
     private var isSuccess: Boolean = false
     private var errorText: String = ""
@@ -28,7 +27,7 @@ class LoginPresenter : LoginContract.LoginPresenter {
         Thread {
             sleep(2_000)
             uiHandler.post {
-                when (model.onLoginAttempt(login, password)) {
+                when (model.login(login, password)) {
                     0 -> {
                         view?.setSuccess()
                         isSuccess = true
@@ -52,7 +51,7 @@ class LoginPresenter : LoginContract.LoginPresenter {
         Thread {
             sleep(2_000)
             uiHandler.post {
-                when (model.onCreateNewUser(login, password)) {
+                when (model.register(login, password)) {
                     0 -> {
                         view?.setSuccess()
                         isSuccess = true
@@ -82,7 +81,7 @@ class LoginPresenter : LoginContract.LoginPresenter {
         Thread {
             sleep(2_000)
             uiHandler.post {
-                when (model.onForgotPassword(login)) {
+                when (model.forgotPassword(login)) {
                     0 -> {
                         view?.setSuccess()
                         isSuccess = true
