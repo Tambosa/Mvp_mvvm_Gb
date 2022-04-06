@@ -1,4 +1,4 @@
-package com.aroman.mvp_mvvm
+package com.aroman.mvp_mvvm.ui
 
 import androidx.annotation.MainThread
 

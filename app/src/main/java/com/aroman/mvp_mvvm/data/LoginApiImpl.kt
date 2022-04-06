@@ -1,4 +1,6 @@
-package com.aroman.mvp_mvvm
+package com.aroman.mvp_mvvm.data
+
+import com.aroman.mvp_mvvm.domain.LoginApi
 
 class LoginApiImpl: LoginApi {
     override fun login(login: String, password: String): Int {

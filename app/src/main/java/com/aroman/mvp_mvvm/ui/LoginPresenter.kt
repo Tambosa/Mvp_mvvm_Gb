@@ -1,7 +1,9 @@
-package com.aroman.mvp_mvvm
+package com.aroman.mvp_mvvm.ui
 
 import android.os.Handler
 import android.os.Looper
+import com.aroman.mvp_mvvm.domain.LoginApi
+import com.aroman.mvp_mvvm.data.MockLoginApiImpl
 import java.lang.Thread.sleep
 
 class LoginPresenter : LoginContract.LoginPresenter {

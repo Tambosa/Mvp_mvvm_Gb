@@ -1,5 +1,6 @@
-package com.aroman.mvp_mvvm
+package com.aroman.mvp_mvvm.data
 
+import com.aroman.mvp_mvvm.domain.LoginApi
 import kotlin.random.Random
 
 class MockLoginApiImpl : LoginApi {

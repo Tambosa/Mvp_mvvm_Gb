@@ -1,4 +1,4 @@
-package com.aroman.mvp_mvvm
+package com.aroman.mvp_mvvm.domain
 
 interface LoginApi {
     fun login(login: String, password: String): Int
