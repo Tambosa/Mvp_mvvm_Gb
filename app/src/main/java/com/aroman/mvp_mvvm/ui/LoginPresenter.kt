@@ -3,12 +3,10 @@ package com.aroman.mvp_mvvm.ui
 import android.os.Handler
 import android.os.Looper
 import com.aroman.mvp_mvvm.domain.LoginApi
-import com.aroman.mvp_mvvm.data.MockLoginApiImpl
 import java.lang.Thread.sleep
 
-class LoginPresenter : LoginContract.LoginPresenter {
+class LoginPresenter(private val api: LoginApi) : LoginContract.LoginPresenter {
     private var view: LoginContract.LoginView? = null
-    private val model: LoginApi = MockLoginApiImpl()
     private val uiHandler = Handler(Looper.getMainLooper())
     private var isSuccess: Boolean = false
     private var errorText: String = ""
@@ -29,7 +27,7 @@ class LoginPresenter : LoginContract.LoginPresenter {
         Thread {
             sleep(2_000)
             uiHandler.post {
-                when (model.login(login, password)) {
+                when (api.login(login, password)) {
                     0 -> {
                         view?.setSuccess()
                         isSuccess = true
@@ -53,7 +51,7 @@ class LoginPresenter : LoginContract.LoginPresenter {
         Thread {
             sleep(2_000)
             uiHandler.post {
-                when (model.register(login, password)) {
+                when (api.register(login, password)) {
                     0 -> {
                         view?.setSuccess()
                         isSuccess = true
@@ -83,7 +81,7 @@ class LoginPresenter : LoginContract.LoginPresenter {
         Thread {
             sleep(2_000)
             uiHandler.post {
-                when (model.forgotPassword(login)) {
+                when (api.forgotPassword(login)) {
                     0 -> {
                         view?.setSuccess()
                         isSuccess = true

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.MainThread
+import com.aroman.mvp_mvvm.app
 import com.aroman.mvp_mvvm.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Thread.sleep
@@ -44,7 +45,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.LoginView {
 
     private fun restorePresenter(): LoginContract.LoginPresenter {
         val presenter = lastCustomNonConfigurationInstance as? LoginContract.LoginPresenter
-        return presenter ?: LoginPresenter()
+        return presenter ?: LoginPresenter(app.api)
     }
 
     override fun onRetainCustomNonConfigurationInstance(): Any? {
