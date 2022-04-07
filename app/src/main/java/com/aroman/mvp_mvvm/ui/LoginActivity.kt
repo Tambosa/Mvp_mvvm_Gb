@@ -45,7 +45,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.LoginView {
 
     private fun restorePresenter(): LoginContract.LoginPresenter {
         val presenter = lastCustomNonConfigurationInstance as? LoginContract.LoginPresenter
-        return presenter ?: LoginPresenter(app.loginUsecase)
+        return presenter ?: LoginPresenter(app.loginUsecase, app.dbUserRepo)
     }
 
     override fun onRetainCustomNonConfigurationInstance(): Any? {

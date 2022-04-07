@@ -1,8 +1,11 @@
 package com.aroman.mvp_mvvm.ui
 
 import com.aroman.mvp_mvvm.domain.LoginUsecase
+import com.aroman.mvp_mvvm.domain.UserRepo
+import com.aroman.mvp_mvvm.domain.entities.User
 
-class LoginPresenter(private val loginUsecase: LoginUsecase) : LoginContract.LoginPresenter {
+class LoginPresenter(private val loginUsecase: LoginUsecase, private val db: UserRepo) :
+    LoginContract.LoginPresenter {
     private var view: LoginContract.LoginView? = null
     private var isSuccess: Boolean = false
     private var errorText: String = ""
@@ -50,6 +53,7 @@ class LoginPresenter(private val loginUsecase: LoginUsecase) : LoginContract.Log
                     errorText = ""
                     messageText = "Login successful"
                     view?.setMessage(messageText)
+                    db.addUser(User(login, password))
                 }
                 1 -> {
                     view?.setError("Login and password do not match")
@@ -71,6 +75,7 @@ class LoginPresenter(private val loginUsecase: LoginUsecase) : LoginContract.Log
                     errorText = ""
                     messageText = "Login successful"
                     view?.setMessage(messageText)
+                    db.updateUser(login, User(login))
                 }
                 1 -> {
                     view?.setError("Login and password do not match")
