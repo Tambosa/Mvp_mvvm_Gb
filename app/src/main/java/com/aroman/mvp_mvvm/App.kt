@@ -2,8 +2,6 @@ package com.aroman.mvp_mvvm
 
 import android.app.Application
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import com.aroman.mvp_mvvm.data.DbUserRepo
 import com.aroman.mvp_mvvm.data.LoginUsecaseImpl
 import com.aroman.mvp_mvvm.data.MockLoginApiImpl

@@ -11,7 +11,7 @@ private class Subscriber<T>(
     }
 }
 
-class Publisher<T> {
+class Publisher<T>(private val isSingle: Boolean = false) {
     private val subscribers: MutableSet<Subscriber<T?>> = mutableSetOf()
     private var value: T? = null
     private var hasFirstValue = false
@@ -29,8 +29,10 @@ class Publisher<T> {
     }
 
     fun post(value: T) {
-        hasFirstValue = true
-        this.value = value
+        if (!isSingle) {
+            hasFirstValue = true
+            this.value = value
+        }
         subscribers.forEach { it.invoke(value) }
     }
 }

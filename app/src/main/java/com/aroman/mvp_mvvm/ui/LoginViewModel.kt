@@ -9,7 +9,7 @@ class LoginViewModel(private val loginUsecase: LoginUsecase, private val db: Use
     LoginContract.ViewModel {
     override val shouldShowProgress: Publisher<Boolean> = Publisher()
     override val isSuccess: Publisher<Boolean> = Publisher()
-    override val errorText: Publisher<String?> = Publisher()
+    override val errorText: Publisher<String?> = Publisher(true)
 
     override fun onLoginAttempt(login: String, password: String) {
         shouldShowProgress.post(true)
