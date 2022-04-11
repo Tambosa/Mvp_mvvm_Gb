@@ -1,30 +1,21 @@
 package com.aroman.mvp_mvvm.ui
 
 import androidx.annotation.MainThread
+import com.aroman.mvp_mvvm.utils.Publisher
 
 class LoginContract {
-
-    interface LoginView {
-        @MainThread
-        fun setSuccess()
-
-        @MainThread
-        fun setError(error: String)
+    interface ViewModel {
+        val shouldShowProgress: Publisher<Boolean>
+        val isSuccess: Publisher<Boolean>
+        val errorText: Publisher<String?>
 
         @MainThread
-        fun setMessage(message: String)
-
-        @MainThread
-        fun showProgress()
-
-        @MainThread
-        fun hideProgress()
-    }
-
-    interface LoginPresenter {
-        fun onAttach(view: LoginView)
         fun onLoginAttempt(login: String, password: String)
+
+        @MainThread
         fun onRegisterNewUser(login: String, password: String)
+
+        @MainThread
         fun onForgotPassword(login: String)
     }
 }
