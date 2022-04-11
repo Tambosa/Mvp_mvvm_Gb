@@ -1,4 +1,4 @@
-package com.aroman.mvp_mvvm
+package com.aroman.mvp_mvvm.ui
 
 import androidx.annotation.MainThread
 
@@ -26,11 +26,5 @@ class LoginContract {
         fun onLoginAttempt(login: String, password: String)
         fun onRegisterNewUser(login: String, password: String)
         fun onForgotPassword(login: String)
-    }
-
-    interface LoginModel {
-        fun onLoginAttempt(login: String, password: String): Int
-        fun onCreateNewUser(login: String, password: String): Int
-        fun onForgotPassword(login: String): Int
     }
 }
