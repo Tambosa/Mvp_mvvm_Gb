@@ -18,6 +18,7 @@ class LoginViewModel(private val loginUsecase: LoginUsecase, private val db: Use
             shouldShowProgress.post(false)
             when (result) {
                 0 -> {
+                    errorText.post("")
                     isSuccess.post(true)
                 }
                 1 -> {
@@ -34,8 +35,8 @@ class LoginViewModel(private val loginUsecase: LoginUsecase, private val db: Use
             shouldShowProgress.post(false)
             when (result) {
                 0 -> {
-                    isSuccess.post(true)
                     errorText.post("")
+                    isSuccess.post(true)
                 }
                 1 -> {
                     isSuccess.post(false)
@@ -55,8 +56,8 @@ class LoginViewModel(private val loginUsecase: LoginUsecase, private val db: Use
             shouldShowProgress.post(false)
             when (result) {
                 0 -> {
-                    isSuccess.post(true)
                     errorText.post("")
+                    isSuccess.post(true)
                 }
                 1 -> {
                     isSuccess.post(false)

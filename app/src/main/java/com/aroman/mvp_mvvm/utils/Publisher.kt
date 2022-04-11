@@ -1,21 +1,27 @@
 package com.aroman.mvp_mvvm.utils
 
-private typealias Subscriber<T> = (T?) -> Unit
+import android.os.Handler
+
+private class Subscriber<T>(
+    private val handler: Handler,
+    private val callback: (T?) -> Unit
+) {
+    fun invoke(value: T?) {
+        handler.post { callback.invoke(value) }
+    }
+}
 
 class Publisher<T> {
-    private val subscribers: MutableSet<Subscriber<T>> = mutableSetOf()
+    private val subscribers: MutableSet<Subscriber<T?>> = mutableSetOf()
     private var value: T? = null
     private var hasFirstValue = false
 
-    fun subscribe(subscriber: Subscriber<T>) {
+    fun subscribe(handler: Handler, callback: (T?) -> Unit) {
+        val subscriber = Subscriber(handler, callback)
         subscribers.add(subscriber)
         if (hasFirstValue) {
             subscriber.invoke(value)
         }
-    }
-
-    fun unsubscribe(subscriber: Subscriber<T>) {
-        subscribers.remove(subscriber)
     }
 
     fun unsubscribeAll() {

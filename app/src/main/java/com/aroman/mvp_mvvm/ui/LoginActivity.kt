@@ -4,6 +4,8 @@ import android.app.Activity
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -14,6 +16,7 @@ import java.lang.Thread.sleep
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: LoginContract.ViewModel
+    private val handler: Handler by lazy { Handler(Looper.getMainLooper()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
             )
         }
 
-        viewModel.shouldShowProgress.subscribe { shouldShow ->
+        viewModel.shouldShowProgress.subscribe(handler) { shouldShow ->
             if (shouldShow == true) {
                 showProgress()
             } else {
@@ -47,13 +50,13 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.isSuccess.subscribe { isSuccess ->
+        viewModel.isSuccess.subscribe(handler) { isSuccess ->
             if (isSuccess == true) {
                 setSuccess()
             }
         }
 
-        viewModel.errorText.subscribe { it?.let { setError(it) } }
+        viewModel.errorText.subscribe(handler) { it?.let { setError(it) } }
     }
 
     private fun restoreViewModel(): LoginContract.ViewModel {
@@ -63,6 +66,13 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onRetainCustomNonConfigurationInstance(): Any? {
         return viewModel
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.shouldShowProgress.unsubscribeAll()
+        viewModel.isSuccess.unsubscribeAll()
+        viewModel.errorText.unsubscribeAll()
     }
 
     private fun setSuccess() {
@@ -77,13 +87,15 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun setError(error: String) {
-        Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
-        binding.root.setBackgroundColor(Color.RED)
-        Thread {
-            sleep(2_000)
-            binding.root.setBackgroundColor(Color.WHITE)
-            runOnUiThread { hideProgress() }
-        }.start()
+        if (error != "") {
+            Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
+            binding.root.setBackgroundColor(Color.RED)
+            Thread {
+                sleep(2_000)
+                binding.root.setBackgroundColor(Color.WHITE)
+                runOnUiThread { hideProgress() }
+            }.start()
+        }
     }
 
     private fun showProgress() {

@@ -11,7 +11,7 @@ import com.aroman.mvp_mvvm.domain.LoginApi
 
 class App : Application() {
     private val loginApi: LoginApi by lazy { MockLoginApiImpl() }
-    val loginUsecase by lazy { LoginUsecaseImpl(app.loginApi, Handler(Looper.getMainLooper())) }
+    val loginUsecase by lazy { LoginUsecaseImpl(app.loginApi) }
     val dbUserRepo by lazy { DbUserRepo() }
 }
 
