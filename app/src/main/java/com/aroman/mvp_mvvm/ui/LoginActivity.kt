@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.aroman.mvp_mvvm.app
 import com.aroman.mvp_mvvm.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
 import java.lang.Thread.sleep
 
 class LoginActivity : AppCompatActivity() {
@@ -77,24 +78,20 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setSuccess() {
         binding.root.setBackgroundColor(Color.GREEN)
-        Thread {
-            sleep(2_000)
-            binding.root.setBackgroundColor(Color.WHITE)
-            runOnUiThread { hideProgress() }
-        }.start()
+        runOnUiThread { hideProgress() }
         hideKeyboard(this)
     }
 
 
     private fun setError(error: String) {
-        if (error != "") {
+        if (error.isNotEmpty()) {
             Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
             binding.root.setBackgroundColor(Color.RED)
-            Thread {
-                sleep(2_000)
+        } else {
+            runOnUiThread {
                 binding.root.setBackgroundColor(Color.WHITE)
-                runOnUiThread { hideProgress() }
-            }.start()
+                hideProgress()
+            }
         }
     }
 

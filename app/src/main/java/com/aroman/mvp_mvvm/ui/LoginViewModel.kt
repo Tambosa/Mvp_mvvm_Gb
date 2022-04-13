@@ -4,6 +4,7 @@ import com.aroman.mvp_mvvm.domain.LoginUsecase
 import com.aroman.mvp_mvvm.domain.UserRepo
 import com.aroman.mvp_mvvm.domain.entities.User
 import com.aroman.mvp_mvvm.utils.Publisher
+import java.lang.Thread.sleep
 
 class LoginViewModel(private val loginUsecase: LoginUsecase, private val db: UserRepo) :
     LoginContract.ViewModel {
@@ -24,6 +25,10 @@ class LoginViewModel(private val loginUsecase: LoginUsecase, private val db: Use
                 1 -> {
                     isSuccess.post(false)
                     errorText.post("Login and password do not match")
+                    Thread {
+                        sleep(2_000)
+                        errorText.post("")
+                    }.run()
                 }
             }
         }
@@ -41,10 +46,18 @@ class LoginViewModel(private val loginUsecase: LoginUsecase, private val db: Use
                 1 -> {
                     isSuccess.post(false)
                     errorText.post("Login is already taken")
+                    Thread {
+                        sleep(2_000)
+                        errorText.post("")
+                    }.run()
                 }
                 2 -> {
                     isSuccess.post(false)
                     errorText.post("Password too short")
+                    Thread {
+                        sleep(2_000)
+                        errorText.post("")
+                    }.run()
                 }
             }
         }
@@ -62,6 +75,10 @@ class LoginViewModel(private val loginUsecase: LoginUsecase, private val db: Use
                 1 -> {
                     isSuccess.post(false)
                     errorText.post("User not found")
+                    Thread {
+                        sleep(2_000)
+                        errorText.post("")
+                    }.run()
                 }
             }
         }

@@ -6,10 +6,11 @@ import com.aroman.mvp_mvvm.data.DbUserRepo
 import com.aroman.mvp_mvvm.data.LoginUsecaseImpl
 import com.aroman.mvp_mvvm.data.MockLoginApiImpl
 import com.aroman.mvp_mvvm.domain.LoginApi
+import com.aroman.mvp_mvvm.domain.LoginUsecase
 
 class App : Application() {
     private val loginApi: LoginApi by lazy { MockLoginApiImpl() }
-    val loginUsecase by lazy { LoginUsecaseImpl(app.loginApi) }
+    val loginUsecase: LoginUsecase by lazy { LoginUsecaseImpl(app.loginApi) }
     val dbUserRepo by lazy { DbUserRepo() }
 }
 
