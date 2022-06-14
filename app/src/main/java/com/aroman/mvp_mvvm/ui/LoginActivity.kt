@@ -4,85 +4,98 @@ import android.app.Activity
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.annotation.MainThread
 import com.aroman.mvp_mvvm.app
 import com.aroman.mvp_mvvm.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Thread.sleep
 
-class LoginActivity : AppCompatActivity(), LoginContract.LoginView {
+class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var presenter: LoginContract.LoginPresenter
+    private lateinit var viewModel: LoginContract.ViewModel
+    private val handler: Handler by lazy { Handler(Looper.getMainLooper()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter = restorePresenter()
-        presenter.onAttach(this)
+        viewModel = restoreViewModel()
 
         binding.loginButton.setOnClickListener {
-            presenter.onLoginAttempt(
+            viewModel.onLoginAttempt(
                 binding.loginEditText.text.toString(),
                 binding.passwordEditText.text.toString()
             )
         }
         binding.registerButton.setOnClickListener {
-            presenter.onRegisterNewUser(
+            viewModel.onRegisterNewUser(
                 binding.loginEditText.text.toString(),
                 binding.passwordEditText.text.toString()
             )
         }
         binding.forgotPasswordButton.setOnClickListener {
-            presenter.onForgotPassword(
+            viewModel.onForgotPassword(
                 binding.loginEditText.text.toString(),
             )
         }
+
+        viewModel.shouldShowProgress.subscribe(handler) { shouldShow ->
+            if (shouldShow == true) {
+                showProgress()
+            } else {
+                hideProgress()
+            }
+        }
+
+        viewModel.isSuccess.subscribe(handler) { isSuccess ->
+            if (isSuccess == true) {
+                setSuccess()
+            }
+        }
+
+        viewModel.errorText.subscribe(handler) { it?.let { setError(it) } }
     }
 
-    private fun restorePresenter(): LoginContract.LoginPresenter {
-        val presenter = lastCustomNonConfigurationInstance as? LoginContract.LoginPresenter
-        return presenter ?: LoginPresenter(app.loginUsecase, app.dbUserRepo)
+    private fun restoreViewModel(): LoginContract.ViewModel {
+        val viewModel = lastCustomNonConfigurationInstance as? LoginContract.ViewModel
+        return viewModel ?: LoginViewModel(app.loginUsecase, app.dbUserRepo)
     }
 
     override fun onRetainCustomNonConfigurationInstance(): Any? {
-        return presenter
+        return viewModel
     }
 
-    @MainThread
-    override fun setSuccess() {
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.shouldShowProgress.unsubscribeAll()
+        viewModel.isSuccess.unsubscribeAll()
+        viewModel.errorText.unsubscribeAll()
+    }
+
+    private fun setSuccess() {
         binding.root.setBackgroundColor(Color.GREEN)
-        Thread {
-            sleep(2_000)
-            binding.root.setBackgroundColor(Color.WHITE)
-            runOnUiThread { hideProgress() }
-        }.start()
+        runOnUiThread { hideProgress() }
         hideKeyboard(this)
-        hideProgress()
     }
 
 
-    @MainThread
-    override fun setError(error: String) {
-        Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
-        binding.root.setBackgroundColor(Color.RED)
-        Thread {
-            sleep(2_000)
-            binding.root.setBackgroundColor(Color.WHITE)
-            runOnUiThread { hideProgress() }
-        }.start()
+    private fun setError(error: String) {
+        if (error.isNotEmpty()) {
+            Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
+            binding.root.setBackgroundColor(Color.RED)
+        } else {
+            runOnUiThread {
+                binding.root.setBackgroundColor(Color.WHITE)
+                hideProgress()
+            }
+        }
     }
 
-    @MainThread
-    override fun setMessage(message: String) {
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
-    }
-
-    @MainThread
-    override fun showProgress() {
+    private fun showProgress() {
         binding.loginButton.isEnabled = false
         binding.registerButton.isEnabled = false
         binding.forgotPasswordButton.isEnabled = false
@@ -90,8 +103,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.LoginView {
         hideKeyboard(this)
     }
 
-    @MainThread
-    override fun hideProgress() {
+    private fun hideProgress() {
         binding.loginButton.isEnabled = true
         binding.registerButton.isEnabled = true
         binding.forgotPasswordButton.isEnabled = true
